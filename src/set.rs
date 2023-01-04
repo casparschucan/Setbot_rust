@@ -3,9 +3,10 @@ pub mod set{
     use rand::seq::SliceRandom;
 	use rand::thread_rng;
 	use svg::node::element::SVG;
+	use svg::node::element::Path;
+	use svg::node::element::path::Data;
 	use svg::Document;
 
-	use svg::node::element::Circle;
 	use svg::node::element::Rectangle;
 	use svg::node::element::Ellipse;
 	use std::cmp;
@@ -145,8 +146,14 @@ pub mod set{
 		let opacity = ["100%", "50%", "0%"];
 		let items_count = card.0 + 2;
 		let mut drawn_card: SVG = SVG::new();
-		
 		for i in 1..items_count {
+			let rom_dat = Data::new()
+				.move_to((i*160/items_count, 15))
+				.line_by((15, 35))
+				.line_by((-15, 35))
+				.line_by((-15, -35))
+				.line_by((15, -35))
+				.close();
 			if card.1 == 0 {
 				let rect = Rectangle::new()
 					.set("x", i*160/items_count - 20)
@@ -160,15 +167,14 @@ pub mod set{
 				drawn_card = drawn_card.add(rect)
 			}
 			if card.1 == 1 {
-				let circ = Circle::new()
-					.set("cx", i*160/items_count)
-					.set("cy", 50)
-					.set("r", 15)
+				
+				let rom: Path = Path::new()
 					.set("stroke", color[card.2])
 					.set("stroke-width", 1)
 					.set("fill", color[card.2])
-					.set("fill-opacity", opacity[card.3]);
-				drawn_card = drawn_card.add(circ);
+					.set("fill-opacity", opacity[card.3])
+					.set("d", rom_dat);
+				drawn_card = drawn_card.add(rom);
 			}
 			if card.1 == 2 {
 				let ell = Ellipse::new()
