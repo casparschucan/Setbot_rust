@@ -203,13 +203,24 @@ pub mod set{
 		svg::save("image.svg", &doc).unwrap();
 	}
 
-	pub fn parse_guess() -> Option<Vec<usize>> {
+	pub enum Input {
+		Command(String),
+		Guess(Vec<usize>)
+	}
+	pub fn parse_input() -> Option<Input> {
 		let mut str_guess = String::new();
 		let stdin = io::stdin();
 		stdin.read_line(& mut str_guess).expect("invalid input couldn't read line");
+		let add = String::from("add cards");	
+		return match str_guess {
+			add => Some(Input::Command(str_guess)),
+			_ => parse_guess(str_guess),
+		}
+	}
+	pub fn parse_guess(str_guess: String) -> Option<Input> {
 		let guess: Vec<usize> = str_guess.split_whitespace()
 									  .map(|x| x.parse().expect("invalid input format couldn't parse to int"))
 									  .collect();
-		return Some(guess);
+		return Some(Input::Guess(guess));
 	}
 }
