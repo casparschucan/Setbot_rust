@@ -3,7 +3,6 @@ extern crate rand;
 
 use svg::Document;
 
-use svg::node::element::Circle;
 use svg::node::element::Rectangle;
 use svg::node::element::SVG;
 use crate::set::set::parse_guess;
@@ -11,14 +10,6 @@ use crate::set::set::new_game;
 
 pub mod set;
 fn main() {
-    let color: &str = "black";
-    let circle = Circle::new()
-        .set("r", "200")
-        .set("cx", "250")
-        .set("cy", "250")
-        .set("fill", "none")
-        .set("stroke", color)
-        .set("stroke-width", 5_i32);
     
     let mut cards: Vec<SVG> = vec![];
     for k in 0..3 {
@@ -42,8 +33,7 @@ fn main() {
     
     let mut document = Document::new()
         .set("height", 500_i32)
-        .set("width", 500_i32)
-        .add(circle);
+        .set("width", 500_i32);
     
     for card in cards.clone() {
         document = document.add(card);
