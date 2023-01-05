@@ -70,7 +70,7 @@ pub mod set{
 		println!("{:?}", game.cur_cards);
 		game
 	}
-
+	pub fn add_cards() {}
 	fn is_set(cards: &Vec<(usize, usize, usize, usize)>, guess: &(usize, usize, usize)) -> bool {
 		if cmp::max(guess.0, cmp::max(guess.1, guess.2)) >= cards.len() {
 			return false;
@@ -210,14 +210,13 @@ pub mod set{
 	pub fn parse_input() -> Option<Input> {
 		let mut str_guess = String::new();
 		let stdin = io::stdin();
-		stdin.read_line(& mut str_guess).expect("invalid input couldn't read line");
-		let add = String::from("add cards");	
-		return match str_guess {
-			add => Some(Input::Command(str_guess)),
-			_ => parse_guess(str_guess),
+		stdin.read_line(& mut str_guess).expect("invalid input couldn't read line");	
+		return match str_guess.as_str() {
+			"add cards" => Some(Input::Command(str_guess)),
+			_ => parse_guess(&str_guess),
 		}
 	}
-	pub fn parse_guess(str_guess: String) -> Option<Input> {
+	pub fn parse_guess(str_guess: &String) -> Option<Input> {
 		let guess: Vec<usize> = str_guess.split_whitespace()
 									  .map(|x| x.parse().expect("invalid input format couldn't parse to int"))
 									  .collect();

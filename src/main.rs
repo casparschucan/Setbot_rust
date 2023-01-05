@@ -5,8 +5,10 @@ use svg::Document;
 
 use svg::node::element::Rectangle;
 use svg::node::element::SVG;
-use crate::set::set::parse_guess;
+use crate::set::set::parse_input;
 use crate::set::set::new_game;
+use crate::set::set::Input;
+use crate::set::set::add_cards;
 
 pub mod set;
 fn main() {
@@ -42,10 +44,13 @@ fn main() {
     svg::save("image.svg", &document).unwrap();
     let mut game = new_game();
     while !game.ended {
-        let basic_guess: Option<Vec<usize>> = parse_guess();
+        let basic_guess: Option<Input> = parse_input();
         match basic_guess {
             Some(x) => {
-                game.guess(x[0], x[1], x[2]);
+                match x {
+                    Input::Guess(y) => game.guess(y[0], y[1], y[2]),
+                    Input::Command(_y) => add_cards(),
+                }
             }
             None =>  {
                 println!("invalid guess format. Couldn't parse");
