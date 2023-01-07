@@ -119,7 +119,7 @@ pub mod set{
 		return None;
 	}
 
-	pub fn draw_deck(cards: &Vec<(usize, usize, usize, usize)>) -> Vec<SVG> {
+	fn draw_deck(cards: &Vec<(usize, usize, usize, usize)>) -> Vec<SVG> {
 		let mut drawn_cards: Vec<SVG> = vec![];
 		for i in 0..cards.len() {
 			let rect = Rectangle::new().set("x", 0)
@@ -141,7 +141,7 @@ pub mod set{
 		drawn_cards
 	}
 
-	pub fn draw_card(card: &(usize, usize, usize, usize)) -> SVG {
+	fn draw_card(card: &(usize, usize, usize, usize)) -> SVG {
 		let color = ["blue", "red", "green"];
 		let opacity = ["100%", "50%", "0%"];
 		let items_count = card.0 + 2;
@@ -192,7 +192,7 @@ pub mod set{
 		drawn_card
 	}
 
-	pub fn save_to_svg(drawn_cards: Vec<SVG>, height: usize, width: usize) {
+	fn save_to_svg(drawn_cards: Vec<SVG>, height: usize, width: usize) {
 		let mut doc = Document::new()
 			.set("height", height)
 			.set("width", width);
@@ -216,7 +216,7 @@ pub mod set{
 			_ => parse_guess(&str_guess),
 		}
 	}
-	pub fn parse_guess(str_guess: &String) -> Option<Input> {
+	fn parse_guess(str_guess: &String) -> Option<Input> {
 		let guess: Vec<usize> = str_guess.split_whitespace()
 									  .map(|x| x.parse().expect("invalid input format couldn't parse to int"))
 									  .collect();

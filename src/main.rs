@@ -5,9 +5,7 @@ use svg::Document;
 
 use svg::node::element::Rectangle;
 use svg::node::element::SVG;
-use crate::set::set::parse_input;
-use crate::set::set::new_game;
-use crate::set::set::Input;
+use crate::set::set::*;
 
 pub mod set;
 fn main() {
