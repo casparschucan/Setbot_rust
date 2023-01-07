@@ -29,10 +29,10 @@ pub mod set{
 					if !contains_set(&self.cur_cards){
 						self.add_cards();
 					}
-					save_to_svg(draw_deck(&self.cur_cards));
+					save_to_svg(draw_deck(&self.cur_cards), self.cur_cards.len()/3*100, 480);
 				} else if contains_set(&self.cur_cards) {
 					println!("{:?}", self.cur_cards);
-					save_to_svg(draw_deck(&self.cur_cards));
+					save_to_svg(draw_deck(&self.cur_cards), self.cur_cards.len()/3*100, 480);
 				} else {
 					self.ended = true;
 					println!("The game has ended");
@@ -49,6 +49,7 @@ pub mod set{
 				self.cur_cards.push(self.stack.pop().unwrap_or((0, 0, 0, 0)));
 				self.cur_cards.push(self.stack.pop().unwrap_or((0, 0, 0, 0)));
 			}
+			save_to_svg(draw_deck(&self.cur_cards), self.cur_cards.len()/3*100, 480)
 		}
 	}
 
@@ -66,11 +67,10 @@ pub mod set{
 		for _ in 0..12 {
 			game.cur_cards.push(game.stack.pop().unwrap());
 		}
-		save_to_svg(draw_deck(&game.cur_cards));
+		save_to_svg(draw_deck(&game.cur_cards), game.cur_cards.len()/3*100, 480);
 		println!("{:?}", game.cur_cards);
 		game
 	}
-	pub fn add_cards() {}
 	fn is_set(cards: &Vec<(usize, usize, usize, usize)>, guess: &(usize, usize, usize)) -> bool {
 		if cmp::max(guess.0, cmp::max(guess.1, guess.2)) >= cards.len() {
 			return false;
@@ -192,10 +192,10 @@ pub mod set{
 		drawn_card
 	}
 
-	pub fn save_to_svg(drawn_cards: Vec<SVG>) {
+	pub fn save_to_svg(drawn_cards: Vec<SVG>, height: usize, width: usize) {
 		let mut doc = Document::new()
-			.set("height", 400)
-			.set("width", 480);
+			.set("height", height)
+			.set("width", width);
 		
 		for card in drawn_cards {
 			doc = doc.add(card);
@@ -211,7 +211,7 @@ pub mod set{
 		let mut str_guess = String::new();
 		let stdin = io::stdin();
 		stdin.read_line(& mut str_guess).expect("invalid input couldn't read line");	
-		return match str_guess.as_str() {
+		return match str_guess.as_str().trim() {
 			"add cards" => Some(Input::Command(str_guess)),
 			_ => parse_guess(&str_guess),
 		}

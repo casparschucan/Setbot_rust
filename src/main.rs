@@ -8,7 +8,6 @@ use svg::node::element::SVG;
 use crate::set::set::parse_input;
 use crate::set::set::new_game;
 use crate::set::set::Input;
-use crate::set::set::add_cards;
 
 pub mod set;
 fn main() {
@@ -49,7 +48,7 @@ fn main() {
             Some(x) => {
                 match x {
                     Input::Guess(y) => game.guess(y[0], y[1], y[2]),
-                    Input::Command(_y) => add_cards(),
+                    Input::Command(_y) => game.add_cards(),
                 }
             }
             None =>  {
