@@ -2,6 +2,7 @@ extern crate serenity;
 extern crate rand;
 
 use svg::Document;
+use std::io;
 
 use svg::node::element::Rectangle;
 use svg::node::element::SVG;
@@ -41,7 +42,9 @@ fn main() {
     svg::save("image.svg", &document).unwrap();
     let mut game = new_game();
     while !game.ended {
-        let basic_guess: Option<Input> = parse_input();
+        let mut str_guess = String::new();
+        io::stdin().read_line(& mut str_guess).expect("Failed to read line from stdin");
+        let basic_guess: Option<Input> = parse_input(& mut str_guess);
         match basic_guess {
             Some(x) => {
                 match x {

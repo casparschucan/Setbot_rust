@@ -10,7 +10,6 @@ pub mod set{
 	use svg::node::element::Rectangle;
 	use svg::node::element::Ellipse;
 	use std::cmp;
-	use std::io;
 
 	pub struct Game {
 		pub cur_cards: Vec<(usize, usize, usize, usize)>,
@@ -207,12 +206,9 @@ pub mod set{
 		Command(String),
 		Guess(Vec<usize>)
 	}
-	pub fn parse_input() -> Option<Input> {
-		let mut str_guess = String::new();
-		let stdin = io::stdin();
-		stdin.read_line(& mut str_guess).expect("invalid input couldn't read line");	
-		return match str_guess.as_str().trim() {
-			"add cards" => Some(Input::Command(str_guess)),
+	pub fn parse_input(str_guess: & mut String) -> Option<Input> {	
+		return match str_guess.as_str().to_lowercase().trim() {
+			"add cards" => Some(Input::Command(str_guess.to_string())),
 			_ => parse_guess(&str_guess),
 		}
 	}
@@ -221,5 +217,52 @@ pub mod set{
 									  .map(|x| x.parse().expect("invalid input format couldn't parse to int"))
 									  .collect();
 		return Some(Input::Guess(guess));
+	}
+}
+
+#[cfg(test)]
+mod test {
+
+	use super::set::*;
+	#[test]
+	#[should_panic]
+	fn test_parse_invalid_input() {
+		let mut str_guess = String::from("addd cards");
+		parse_input(& mut str_guess);
+	}
+	#[test]
+	fn test_parse_valid_input() {
+		let mut command = String::from("add cards");
+		let mut command_upper = String::from("AdD CaRdS");
+		let mut numbers = String::from("0 4 18");
+		let parsed_command = parse_input(& mut command);
+		let parsed_command_upper = parse_input(& mut command_upper);
+		let parsed_numbers = parse_input(& mut numbers);
+		
+		assert!(matches!(parsed_command, Some(_)));
+		match parsed_command {
+			Some(input) => assert!(matches!(input, Input::Command(_))),
+			None => {}
+		}
+
+		assert!(matches!(parsed_command_upper, Some(_)));
+		match parsed_command_upper {
+			Some(input) => assert!(matches!(input, Input::Command(_))),
+			None => {}
+		}
+
+		assert!(matches!(parsed_numbers, Some(_)));
+		match parsed_numbers {
+			Some(input) => {
+				assert!(matches!(input, Input::Guess(_)));
+				match input {
+					Input::Guess(vec) => {
+						assert_eq!(vec, Vec::from([0, 4, 18]));
+					}
+					Input::Command(_) => {}
+				}
+			}
+			None => {}
+		}
 	}
 }
